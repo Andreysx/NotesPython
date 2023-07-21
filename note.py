@@ -43,6 +43,6 @@ class Note(object):
         self._create_date = create_date
 
     def __str__(self):
-        return f"Заметка номер: {self._note_id}\nНазвание: {self._title}\n" \
-               f"Описание: {self._body}\nВремя создание: {self._create_date}"
+        return str({"Заметка номер: ": self._note_id, "Название: ": self._title,
+               "Описание: ": self._body, "Время создание: ": self._create_date})
 
