@@ -3,16 +3,17 @@ from note import Note
 import datetime
 import ast
 from pprint import pprint
-
-
+from config import BASE_PATH
+import os
 
 class JsonHandler:
 
-    def __init__(self, file):
-        self.id = 0
-        self.file = file
+
+    def __init__(self):
+        self.id = 1
         self.notes = list()
         self.note = Note()
+        self.current_notes = self.read_file()
 
     def create_note(self, note: list):
         self.note.note_id = note[0]
@@ -20,10 +21,16 @@ class JsonHandler:
         self.note.body = note[2]
         self.note.date = note[3]
         self.notes.append(self.note.__str__())
+        self.write_file()
 
 
     def add_new_note(self):
-        self.id += 1
+        try:
+            max_id = max([value["Заметка номер: "] for value in self.convent_to_dict(self.read_file())])
+        except ValueError:
+            max_id = None
+        if max_id:
+            self.id = max_id + 1
         new_note = list()
         new_note.append(self.id)
         new_note.append(input("Введите название заметки: "))
@@ -32,22 +39,27 @@ class JsonHandler:
         self.create_note(new_note)
 
     def write_file(self):
-        with open("json_notes.json", "w", encoding="utf-8") as f:
-            number1 = json.dumps(self.notes, default=str, ensure_ascii=False)
+        with open(BASE_PATH, "w", encoding="utf-8") as f:
+            number1 = json.dumps(self.current_notes + self.notes, default=str, ensure_ascii=False)
             f.write(number1)
 
 
     def read_file(self):
-        try:
-            with open("json_notes.json", "r", encoding="utf-8") as f:
-                result_json = json.load(f)
-                result_json.sort(key=lambda x: x["Время создание: "])
-            return result_json
-        except FileExistsError as ex:
-            return ex
+        if os.path.isfile(BASE_PATH):
+            with open(BASE_PATH, "r", encoding="utf-8") as f:
+                try:
+                    result_json = json.load(f)
+                    if len(result_json) > 0:
+                        result_json = [self.convent_to_dict(value) for value in result_json]
+                    result_json.sort(key=lambda x: x["Время создание: "])
+                    return result_json
+                except ValueError:
+                    return []
+        else:
+            return []
 
     def del_note(self):
-        id = int(input("Введите id для изменения: "))
+        id = int(input("Введите id для удаления: "))
         result = self.read_file()
         print()
         for i, value in enumerate(result):
