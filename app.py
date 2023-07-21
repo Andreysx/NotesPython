@@ -9,7 +9,8 @@ def run():
                         "3 - Посмотреть заметку по id\n"
                         "4 - Изменить заметку\n"
                         "5 - Удалить заметку\n"
-                        "6 - Выйти\n"
+                        "6 - Удалить все заметки\n"
+                        "7 - Выйти\n"
                         ))
         if command == 1:
             handler.add_new_note()
@@ -22,6 +23,8 @@ def run():
         elif command == 5:
             handler.del_note()
         elif command == 6:
+            handler.del_all_notes()
+        elif command == 7:
             break
         else:
             print("Команда не найдена")

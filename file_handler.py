@@ -96,6 +96,12 @@ class JsonHandler:
         self.notes = result
         self.write_file()
 
+
+
+    def del_all_notes(self):
+        os.remove(BASE_PATH)
+
+
     @staticmethod
     def convent_to_dict(value):
         if isinstance(value, str):
@@ -106,6 +112,3 @@ class JsonHandler:
 
 
 
-    # def write(self, notes):
-    #     notes_list = list()
-    #     for note in notes:
