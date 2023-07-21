@@ -41,6 +41,7 @@ class JsonHandler:
         try:
             with open("json_notes.json", "r", encoding="utf-8") as f:
                 result_json = json.load(f)
+                result_json.sort(key=lambda x: x["Время создание: "])
             return result_json
         except FileExistsError as ex:
             return ex
@@ -50,7 +51,7 @@ class JsonHandler:
         result = self.read_file()
         print()
         for i, value in enumerate(result):
-            value = ast.literal_eval(value)
+            value = self.convent_to_dict(value)
             if id == int(value["Заметка номер: "]):
                 result.pop(i)
         self.notes = result
@@ -60,21 +61,35 @@ class JsonHandler:
     def show_all_notes(self):
         all_notes = self.read_file()
         for i in all_notes:
-            pprint(ast.literal_eval(i))
+            pprint(self.convent_to_dict(i))
 
+    def show_note(self):
+        id = int(input("Введите id для просмотра: "))
+        all_notes = self.read_file()
+        for i, value in enumerate(all_notes):
+            value = self.convent_to_dict(value)
+            if id == int(value["Заметка номер: "]):
+                pprint(value)
 
     def change_note(self):
         id = int(input("Введите id для изменения: "))
         result = self.read_file()
         print()
         for i, value in enumerate(result):
-            value = ast.literal_eval(value)
+            value = self.convent_to_dict(value)
             if id == int(value["Заметка номер: "]):
                 value["Название: "] = input("Введите новое название: ")
                 value["Описание: "] = input("Новое описание: ")
             result[i] = value
         self.notes = result
         self.write_file()
+
+    @staticmethod
+    def convent_to_dict(value):
+        if isinstance(value, str):
+            value = ast.literal_eval(value)
+        return value
+
 
 
 
