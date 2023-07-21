@@ -46,3 +46,4 @@ class Note(object):
         return str({"Заметка номер: ": self._note_id, "Название: ": self._title,
                "Описание: ": self._body, "Время создание: ": self._create_date})
 
+

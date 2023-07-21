@@ -1,6 +1,10 @@
 import json
 from note import Note
 import datetime
+import ast
+from pprint import pprint
+
+
 
 class JsonHandler:
 
@@ -41,17 +45,36 @@ class JsonHandler:
         except FileExistsError as ex:
             return ex
 
-    def del_note(self, id):
+    def del_note(self):
+        id = int(input("Введите id для изменения: "))
         result = self.read_file()
         print()
         for i, value in enumerate(result):
-            value = dict(value)
+            value = ast.literal_eval(value)
             if id == int(value["Заметка номер: "]):
                 result.pop(i)
         self.notes = result
         self.write_file()
 
 
+    def show_all_notes(self):
+        all_notes = self.read_file()
+        for i in all_notes:
+            pprint(ast.literal_eval(i))
+
+
+    def change_note(self):
+        id = int(input("Введите id для изменения: "))
+        result = self.read_file()
+        print()
+        for i, value in enumerate(result):
+            value = ast.literal_eval(value)
+            if id == int(value["Заметка номер: "]):
+                value["Название: "] = input("Введите новое название: ")
+                value["Описание: "] = input("Новое описание: ")
+            result[i] = value
+        self.notes = result
+        self.write_file()
 
 
 
